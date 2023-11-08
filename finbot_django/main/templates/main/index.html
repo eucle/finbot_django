@@ -1,0 +1,289 @@
+<!DOCTYPE html> 
+<html lang="en" dir="ltr"> 
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>chatsjs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head> 
+
+<body>
+  <div class="container">
+    <div>
+      <center class="row"> 
+        <h1>Информация о расходах - <b>Finbot 1.0</b></h1> 
+      </center> 
+      <hr />
+
+      {% load crispy_forms_tags %}
+
+          <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-3">
+                {{ form.start_date|as_crispy_field }}
+              </div>
+              <div class="col-3">
+                {{ form.end_date|as_crispy_field }}
+              </div>
+            </div>
+            <input type="submit" class="btn btn-success" value="Отправить">
+          </form>
+      </div>
+
+      <div class="row"> 
+        <div class="col-md-6"> 
+          <canvas id="chart1"></canvas>
+          <hr /> 
+        </div> 
+        <div class="col-md-6"> 
+          <canvas id="chart2"></canvas>
+          <hr />
+        </div> 
+      </div>
+
+      <div class="row"> 
+        <div class="col-md-6"> 
+          <canvas id="chart3"></canvas> 
+        </div> 
+        <div class="col-md-6"> 
+          <canvas id="chart4"></canvas> 
+        </div> 
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+      //chart1
+      const ctx = document.getElementById('chart1').getContext('2d')
+      const data1 = {
+          labels: {{ cat_labels|safe }},
+          datasets: [{
+              label: 'RUB',
+              data: {{ cat_data|safe }},
+              backgroundColor: [ 
+              'rgba(255, 99, 132, 0.2)', 
+              'rgba(54, 162, 235, 0.2)', 
+              'rgba(255, 206, 86, 0.2)', 
+              'rgba(75, 192, 192, 0.2)', 
+              'rgba(153, 102, 255, 0.2)', 
+              'rgba(255, 159, 64, 0.2)' 
+              ], 
+              borderColor: [ 
+              'rgba(255, 99, 132, 1)', 
+              'rgba(54, 162, 235, 1)', 
+              'rgba(255, 206, 86, 1)', 
+              'rgba(75, 192, 192, 1)', 
+              'rgba(153, 102, 255, 1)', 
+              'rgba(255, 159, 64, 1)' 
+              ], 
+              borderWidth: 1
+          }]
+      }
+      const options1 = {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Категории расходов',
+              font: {
+                size: 16
+              }
+            }
+          }
+      }
+
+      const myChart1 = new Chart(ctx, {
+          type: 'bar',
+          data: data1,
+          options: options1
+      })
+
+      //chart2
+      const ctx2 = document.getElementById('chart2').getContext('2d')
+      const data2 = {
+          labels: {{ sub_labels|safe }},
+          datasets: [{
+              label: 'RUB',
+              data: {{ sub_data|safe }},
+              backgroundColor: [ 
+              'rgba(255, 99, 132, 0.2)', 
+              'rgba(54, 162, 235, 0.2)', 
+              'rgba(255, 206, 86, 0.2)', 
+              'rgba(75, 192, 192, 0.2)', 
+              'rgba(153, 102, 255, 0.2)', 
+              'rgba(255, 159, 64, 0.2)' 
+              ], 
+              borderColor: [ 
+              'rgba(255, 99, 132, 1)', 
+              'rgba(54, 162, 235, 1)', 
+              'rgba(255, 206, 86, 1)', 
+              'rgba(75, 192, 192, 1)', 
+              'rgba(153, 102, 255, 1)', 
+              'rgba(255, 159, 64, 1)' 
+              ], 
+              borderWidth: 1
+          }]
+      }
+      const options2 = {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Подкатегории расходов',
+              font: {
+                size: 16
+              }
+            }
+          }
+      }
+
+      const myChart2 = new Chart(ctx2, {
+          type: 'bar',
+          data: data2,
+          options: options2
+      })
+
+      //chart3
+      const ctx3 = document.getElementById('chart3').getContext('2d')
+      const data3 = {
+          labels: {{ pay_labels|safe }},
+          datasets: [{
+              label: 'RUB',
+              data: {{ pay_data|safe }},
+              backgroundColor: [ 
+              'rgba(255, 99, 132, 0.2)', 
+              'rgba(54, 162, 235, 0.2)', 
+              'rgba(255, 206, 86, 0.2)', 
+              'rgba(75, 192, 192, 0.2)', 
+              'rgba(153, 102, 255, 0.2)', 
+              'rgba(255, 159, 64, 0.2)' 
+              ], 
+              borderColor: [ 
+              'rgba(255, 99, 132, 1)', 
+              'rgba(54, 162, 235, 1)', 
+              'rgba(255, 206, 86, 1)', 
+              'rgba(75, 192, 192, 1)', 
+              'rgba(153, 102, 255, 1)', 
+              'rgba(255, 159, 64, 1)' 
+              ], 
+              borderWidth: 1
+          }]
+      }
+      const options3 = {
+          indexAxis: 'y',
+          scales: {
+              y: {ticks: {mirror: true},
+                  beginAtZero: true
+              }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Cпособы платежа',
+              font: {
+                size: 16
+              }
+            }
+          }
+      }
+
+      const myChart3 = new Chart(ctx3, {
+          type: 'bar',
+          data: data3,
+          options: options3
+      })
+
+      //chart4
+      const ctx4 = document.getElementById('chart4').getContext('2d')
+      const data4 = {
+          labels: {{ exp_labels|safe }},
+          datasets: [{
+              label: 'RUB',
+              data: {{ exp_data|safe }},
+              borderWidth: 1,
+              pointStyle: 'circle',
+              pointRadius: 5,
+              pointHoverRadius: 7
+          }]
+      }
+      const options4 = {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Динамика расходов по дням',
+              font: {
+                size: 16
+              }
+            }
+          }
+      }
+
+      const myChart4 = new Chart(ctx4, {
+          type: 'line',
+          data: data4,
+          options: options4
+      })
+
+      </script>
+      <br />
+      <br />
+      {% if filtered_by_dates %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Категория</th>
+              <th>Подкатегория</th>
+              <th>Способ платежа</th>
+              <th>Сумма</th>
+              <th>Дата</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for transaction in filtered_by_dates %}
+            <tr>
+              <td>
+                {{ transaction.id }}
+              </td> 
+              <td>
+                {{ transaction.category }} 
+              </td>
+              <td>
+                {{ transaction.subcategory }}
+              </td>
+              <td>
+                {{ transaction.payment_method }}
+              </td>
+              <td>
+                {{ transaction.amount }}
+              </td>
+              <td>
+                {{ transaction.created_at }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    </div>
+  </div>
+
+</body> 
+
+</html> 
